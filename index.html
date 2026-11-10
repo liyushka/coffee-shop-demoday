@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="uz" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espresso Craft — Premium Coffee & Bakery</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2C1810',
+                        'espresso-dark': '#1A0E0A',
+                        caramel: '#D4A373',
+                        'caramel-hover': '#C08D5D',
+                        cream: '#FAF6F0',
+                        beige: '#F5EBE0',
+                        charcoal: '#1A1A1A'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-cream text-espresso dark:bg-espresso-dark dark:text-cream min-h-screen flex flex-col justify-between selection:bg-caramel selection:text-white">
+
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-40 bg-cream/90 dark:bg-espresso-dark/90 backdrop-blur-md border-b border-beige dark:border-espresso transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-full bg-espresso dark:bg-caramel flex items-center justify-center text-cream dark:text-espresso shadow-sm">
+                        <i class="fa-solid fa-mug-hot text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold tracking-tight font-serif-heading text-espresso dark:text-cream block leading-tight">ESPRESSO CRAFT</span>
+                        <span class="text-[10px] tracking-widest uppercase text-caramel font-semibold block" data-i18n="slogan">SPECIALTY COFFEE</span>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-link active py-1 text-sm tracking-wide hover:text-caramel transition-colors" data-i18n="nav_home">Bosh sahifa</button>
+                    <button onclick="switchTab('menu')" id="nav-menu" class="nav-link py-1 text-sm tracking-wide hover:text-caramel transition-colors" data-i18n="nav_menu">Menyu</button>
+                    <button onclick="switchTab('favorites')" id="nav-favorites" class="nav-link py-1 text-sm tracking-wide hover:text-caramel transition-colors relative" data-i18n="nav_favorites">
+                        Tanlanganlar
+                        <span id="fav-badge" class="hidden absolute -top-2 -right-4 bg-caramel text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">0</span>
+                    </button>
+                    <button onclick="switchTab('cart')" id="nav-cart" class="nav-link py-1 text-sm tracking-wide hover:text-caramel transition-colors relative" data-i18n="nav_cart">
+                        Savat
+                        <span id="cart-badge" class="hidden absolute -top-2 -right-4 bg-espresso dark:bg-caramel text-cream dark:text-espresso text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">0</span>
+                    </button>
+                    <button onclick="switchTab('about')" id="nav-about" class="nav-link py-1 text-sm tracking-wide hover:text-caramel transition-colors" data-i18n="nav_about">Biz haqimizda</button>
+                </nav>
+
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <select id="language-select" onchange="changeLanguage(this.value)" class="bg-beige dark:bg-espresso text-espresso dark:text-cream text-xs font-semibold rounded-lg px-2.5 py-1.5 border border-caramel/20 focus:outline-none focus:ring-1 focus:ring-caramel cursor-pointer">
+                        <option value="uz">UZ</option>
+                        <option value="ru">RU</option>
+                        <option value="en">EN</option>
+                    </select>
+
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg bg-beige dark:bg-espresso text-espresso dark:text-cream hover:text-caramel transition-colors focus:outline-none">
+                        <i id="theme-icon-sun" class="fa-solid fa-sun text-caramel hidden text-lg"></i>
+                        <i id="theme-icon-moon" class="fa-solid fa-moon text-espresso text-lg"></i>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-espresso dark:text-cream hover:text-caramel focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" id="menu-hamburger"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-beige dark:border-espresso bg-cream dark:bg-espresso-dark px-4 pt-2 pb-4 space-y-2 shadow-lg">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-beige dark:hover:bg-espresso" data-i18n="nav_home">Bosh sahifa</button>
+            <button onclick="switchTab('menu'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-beige dark:hover:bg-espresso" data-i18n="nav_menu">Menyu</button>
+            <button onclick="switchTab('favorites'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-beige dark:hover:bg-espresso flex justify-between items-center">
+                <span data-i18n="nav_favorites">Tanlanganlar</span>
+                <span id="fav-badge-mobile" class="bg-caramel text-white text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('cart'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-beige dark:hover:bg-espresso flex justify-between items-center">
+                <span data-i18n="nav_cart">Savat</span>
+                <span id="cart-badge-mobile" class="bg-espresso dark:bg-caramel text-cream dark:text-espresso text-xs px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-beige dark:hover:bg-espresso" data-i18n="nav_about">Biz haqimizda</button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="page-content">
+            <div class="relative bg-espresso text-cream overflow-hidden">
+                <div class="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
+                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1600&q=80" alt="Coffee" class="w-full h-full object-cover">
+                </div>
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 md:py-36 flex flex-col items-start justify-center">
+                    <span class="inline-block px-3 py-1 bg-caramel/20 border border-caramel/40 text-caramel rounded-full text-xs tracking-widest uppercase font-semibold mb-4" data-i18n="hero_badge">100% Arabica Specialty</span>
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold font-serif-heading max-w-3xl leading-tight mb-6" data-i18n="hero_title">Mukammal qahva zavqi va haqiqiy san'at</h1>
+                    <p class="text-lg sm:text-xl text-beige/90 max-w-xl mb-8 font-light" data-i18n="hero_desc">Har bir piyolada yuqori sifatli donalar va baristalarimizning samimiy mehnati mujassam.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="switchTab('menu')" class="px-8 py-4 bg-caramel hover:bg-caramel-hover text-white font-semibold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5" data-i18n="hero_btn_menu">Menyuni ko'rish</button>
+                        <button onclick="switchTab('cart')" class="px-8 py-4 bg-transparent border-2 border-beige text-beige hover:bg-beige hover:text-espresso font-semibold rounded-xl transition-all" data-i18n="hero_btn_order">Buyurtma berish</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold font-serif-heading mb-3" data-i18n="home_featured_title">Tanlangan Bestsellerlar</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="home_featured_subtitle">Mijozlarimiz tomonidan eng ko'p sevib iste'mol qilinadigan ichimliklar</p>
+                </div>
+                <div id="home-featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: MENU -->
+        <section id="page-menu" class="page-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                    <div>
+                        <h1 class="text-3xl sm:text-4xl font-bold font-serif-heading mb-1" data-i18n="menu_title">Bizning Menyu</h1>
+                        <p class="text-xs text-gray-600 dark:text-gray-400" data-i18n="menu_subtitle">Har bir ta'mga mos sifatli va mazali tanlovlar</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                            <input type="text" id="menu-search" oninput="filterMenu()" placeholder="Qidirish..." class="w-full sm:w-60 pl-9 pr-4 py-2 bg-white dark:bg-espresso border border-beige dark:border-espresso/50 rounded-xl text-sm focus:outline-none focus:border-caramel text-espresso dark:text-cream">
+                        </div>
+                        <select id="menu-sort" onchange="filterMenu()" class="bg-white dark:bg-espresso border border-beige dark:border-espresso/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-caramel text-espresso dark:text-cream cursor-pointer">
+                            <option value="default" data-i18n="sort_default">Saralash: Standart</option>
+                            <option value="low-high" data-i18n="sort_low_high">Narx: Arzonroq</option>
+                            <option value="high-low" data-i18n="sort_high_low">Narx: Qimmatroq</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-3 mb-8 border-b border-beige dark:border-espresso">
+                    <button onclick="setCategory('all')" id="cat-all" class="cat-btn active px-4 py-2 rounded-xl text-xs font-semibold bg-caramel text-white" data-i18n="cat_all">Barchasi</button>
+                    <button onclick="setCategory('hot')" id="cat-hot" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_hot">Issiq Qahva</button>
+                    <button onclick="setCategory('iced')" id="cat-iced" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_iced">Muzli Qahva</button>
+                    <button onclick="setCategory('tea')" id="cat-tea" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_tea">Matcha & Choy</button>
+                    <button onclick="setCategory('signature')" id="cat-signature" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_signature">Mualliflik</button>
+                    <button onclick="setCategory('desserts')" id="cat-desserts" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_desserts">Dessertlar</button>
+                    <button onclick="setCategory('bakery')" id="cat-bakery" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-beige dark:bg-espresso text-espresso dark:text-cream" data-i18n="cat_bakery">Pishiriqlar</button>
+                </div>
+
+                <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: FAVORITES -->
+        <section id="page-favorites" class="page-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <h1 class="text-3xl sm:text-4xl font-bold font-serif-heading mb-2" data-i18n="fav_title">Sizning Tanlanganlaringiz</h1>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-8" data-i18n="fav_subtitle">Saqlab qo'yilgan yoqimli mahsulotlaringiz ruyhati</p>
+
+                <div id="fav-empty-state" class="hidden text-center py-20 border-2 border-dashed border-beige dark:border-espresso rounded-3xl">
+                    <i class="fa-regular fa-heart text-4xl text-caramel mb-3"></i>
+                    <h3 class="text-xl font-bold font-serif-heading mb-2" data-i18n="fav_empty_head">Hali hech narsa saqlanmagan</h3>
+                    <button onclick="switchTab('menu')" class="px-6 py-2.5 bg-caramel text-white text-xs font-semibold rounded-xl" data-i18n="btn_go_menu">Menyuga o'tish</button>
+                </div>
+                <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: CART & CHECKOUT -->
+        <section id="page-cart" class="page-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <h1 class="text-3xl sm:text-4xl font-bold font-serif-heading mb-8" data-i18n="cart_title">Savat va Buyurtma</h1>
+
+                <div id="cart-empty-state" class="hidden text-center py-20 border-2 border-dashed border-beige dark:border-espresso rounded-3xl">
+                    <i class="fa-solid fa-cart-shopping text-4xl text-caramel mb-3"></i>
+                    <h3 class="text-xl font-bold font-serif-heading mb-2" data-i18n="cart_empty_head">Savatingiz bo'sh</h3>
+                    <button onclick="switchTab('menu')" class="px-6 py-2.5 bg-caramel text-white text-xs font-semibold rounded-xl" data-i18n="btn_go_menu">Menyuga o'tish</button>
+                </div>
+
+                <div id="cart-content-wrapper" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex justify-between items-center pb-3 border-b border-beige dark:border-espresso">
+                            <span class="text-sm font-bold uppercase tracking-wider text-caramel" data-i18n="cart_items_header">Mahsulotlar</span>
+                            <button onclick="clearCart()" class="text-xs text-red-500 hover:underline" data-i18n="cart_clear_all">Savatni tozalash</button>
+                        </div>
+                        <div id="cart-items-container" class="space-y-4"></div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-beige dark:bg-espresso p-6 sm:p-8 rounded-3xl border border-caramel/20 shadow-sm space-y-6">
+                        <h2 class="text-xl font-bold font-serif-heading border-b border-caramel/20 pb-3" data-i18n="checkout_title">Buyurtmani rasmiylashtirish</h2>
+                        <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1" data-i18n="form_name">Ismingiz *</label>
+                                <input type="text" id="cust-name" required placeholder="Ali Valiyev" class="w-full px-4 py-2.5 bg-white dark:bg-espresso-dark border border-caramel/20 rounded-xl text-sm focus:outline-none focus:border-caramel">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1" data-i18n="form_phone">Telefon raqamingiz *</label>
+                                <input type="tel" id="cust-phone" required placeholder="+998 90 123 45 67" class="w-full px-4 py-2.5 bg-white dark:bg-espresso-dark border border-caramel/20 rounded-xl text-sm focus:outline-none focus:border-caramel">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-2" data-i18n="form_method">Yetkazib berish usuli</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="cursor-pointer border border-caramel/30 rounded-xl p-3 flex items-center justify-center space-x-2 bg-white dark:bg-espresso-dark">
+                                        <input type="radio" name="delivery_method" value="pickup" checked onchange="toggleAddressField(false)" class="accent-caramel">
+                                        <span class="text-xs font-semibold" data-i18n="method_pickup">Olib ketish</span>
+                                    </label>
+                                    <label class="cursor-pointer border border-caramel/30 rounded-xl p-3 flex items-center justify-center space-x-2 bg-white dark:bg-espresso-dark">
+                                        <input type="radio" name="delivery_method" value="delivery" onchange="toggleAddressField(true)" class="accent-caramel">
+                                        <span class="text-xs font-semibold" data-i18n="method_delivery">Yetkazib berish</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="address-container" class="hidden">
+                                <label class="block text-xs font-bold uppercase mb-1" data-i18n="form_address">Yetkazib berish manzili *</label>
+                                <textarea id="cust-address" rows="2" placeholder="Toshkent sh., Yunusobod..." class="w-full px-4 py-2.5 bg-white dark:bg-espresso-dark border border-caramel/20 rounded-xl text-sm focus:outline-none focus:border-caramel"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase mb-1" data-i18n="form_comment">Izoh</label>
+                                <input type="text" id="cust-comment" placeholder="Shakar miqdori..." class="w-full px-4 py-2.5 bg-white dark:bg-espresso-dark border border-caramel/20 rounded-xl text-sm focus:outline-none focus:border-caramel">
+                            </div>
+                            <div class="border-t border-caramel/20 pt-4 space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400" data-i18n="summary_subtotal">Mahsulotlar summasi:</span>
+                                    <span id="summary-subtotal" class="font-semibold">0 UZS</span>
+                                </div>
+                                <div class="flex justify-between text-base font-bold pt-2 border-t border-caramel/20">
+                                    <span data-i18n="summary_total">Jami to'lov:</span>
+                                    <span id="summary-total" class="text-caramel">0 UZS</span>
+                                </div>
+                            </div>
+                            <button type="submit" id="btn-submit-order" class="w-full py-4 bg-caramel hover:bg-caramel-hover text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-paper-plane fa-solid text-sm"></i>
+                                <span data-i18n="btn_place_order">Telegram Bot Orqali Yuborish</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 5: ABOUT -->
+        <section id="page-about" class="page-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <span class="text-caramel uppercase text-xs font-bold" data-i18n="about_badge">Tarix va Falsafa</span>
+                        <h1 class="text-3xl sm:text-5xl font-bold font-serif-heading" data-i18n="about_title">Espresso Craft Tarixi</h1>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm" data-i18n="about_story1">Espresso Craft 2021-yilda Toshkent markazida o'z faoliyatini boshlagan.</p>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" alt="Interior" class="rounded-3xl shadow-xl w-full h-80 object-cover">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-espresso text-cream border-t border-caramel/20 py-8 text-center text-xs text-beige/50">
+        &copy; 2026 Espresso Craft Coffee Shop. Bot: @coffeeshopdemoday_bot
+    </footer>
+
+    <!-- JS Skriptlar -->
+    <script src="js/translations.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
